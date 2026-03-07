@@ -6,8 +6,7 @@
 // Configuration object for easy URL updates
 const CONFIG = {
     // Template URLs - Replace these with your actual URLs
-    profilePhoto: '../assets/about.png',
-    aboutPhoto: '../assets/pf.png',
+    aboutPhoto: '../assets/about.png',
     resumeUrl: '../assets/resume.pdf',
     
     // Contact information
@@ -19,7 +18,7 @@ const CONFIG = {
     projects: [
         {
             image: '../assets/projects/deenify.png',
-            link: 'https://github.com/Tayyaba-tz/Deenify'
+            link: 'https://deenify-tk.netlify.app/'
         },
         {
             image: '../assets/projects/fintrack.png',
@@ -27,11 +26,11 @@ const CONFIG = {
         },
         {
             image: '../assets/projects/pokemon.png',
-            link: 'https://github.com/Tayyaba-tz/Pokemon_Info_Card'
+            link: 'https://pokemon-info-card.netlify.app/'
         },
         {
             image: '../assets/projects/weather.png',
-            link: 'https://github.com/Tayyaba-tz/Weather_Dashboard'
+            link: 'https://weather-dash-tz.netlify.app/'
         },
         {
             image: '../assets/projects/evacuation.jpeg',
@@ -39,12 +38,11 @@ const CONFIG = {
         },
         {
             image: '../assets/projects/tomzora.png',
-            link: 'https://github.com/Tayyaba-tz/CodeAlpha-Tomzora'
+            link: 'https://tomzora.netlify.app/'
         },
     ],
    
 };
-
 // ============================================
 // UTILITY FUNCTIONS
 // ============================================
@@ -81,8 +79,39 @@ function updateDynamicContent() {
         }
     });
     
+    // Update reviewer avatars
+    const avatarImages = document.querySelectorAll('.reviewer-avatars img');
+    avatarImages.forEach((img, index) => {
+        if (index < CONFIG.avatars.length) {
+            img.src = CONFIG.avatars[index];
+        }
+    });
+    
+    // Update social links
+    updateSocialLinks();
+    
     // Update contact information
     updateContactInfo();
+}
+
+/**
+ * Update all social media links
+ */
+function updateSocialLinks() {
+    const socialLinks = {
+        'TWITTER_URL': CONFIG.twitter,
+        'DRIBBBLE_URL': CONFIG.dribbble,
+        'BEHANCE_URL': CONFIG.behance,
+        'PINTEREST_URL': CONFIG.pinterest
+    };
+    
+    document.querySelectorAll('a[href*="TWITTER_URL"], a[href*="DRIBBBLE_URL"], a[href*="BEHANCE_URL"], a[href*="PINTEREST_URL"]').forEach(link => {
+        for (const [placeholder, url] of Object.entries(socialLinks)) {
+            if (link.href.includes(placeholder)) {
+                link.href = url;
+            }
+        }
+    });
 }
 
 /**
@@ -256,28 +285,23 @@ function animateSkills() {
 function initProjectFilter() {
     const filterBtns = document.querySelectorAll('.filter-btn');
     const projectCards = document.querySelectorAll('.project-card');
-    const projectsGrid = document.querySelector('.projects-grid');
-
+    
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
+            // Update active button
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-
+            
+            // Filter projects
             const filter = btn.getAttribute('data-filter');
-
-            if (filter === 'all') {
-                projectsGrid.classList.remove('is-filtered');
-            } else {
-                projectsGrid.classList.add('is-filtered');
-            }
-
             projectCards.forEach(card => {
                 const category = card.getAttribute('data-category');
+                
                 if (filter === 'all' || category === filter) {
-                    card.style.display = '';          // restore default
+                    card.classList.remove('hidden');
                     card.style.animation = 'fadeIn 0.3s ease-in';
                 } else {
-                    card.style.display = 'none';      // inline style — CSS cannot override this
+                    card.classList.add('hidden');
                 }
             });
         });
