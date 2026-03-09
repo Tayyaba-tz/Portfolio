@@ -252,7 +252,10 @@ function animateStats() {
     statNumbers.forEach(stat => {
         const target = parseInt(stat.getAttribute('data-target'));
         let current = 0;
-        const increment = target / 50; // Animate over 50 frames
+        const duration = 2500; // 2.5 seconds
+        const frames = 60;
+        const increment = target / frames;
+        const frameTime = duration / frames;
         
         const interval = setInterval(() => {
             current += increment;
@@ -262,7 +265,7 @@ function animateStats() {
             } else {
                 stat.textContent = Math.floor(current);
             }
-        }, 30);
+        }, frameTime);
     });
 }
 
@@ -270,9 +273,14 @@ function animateStats() {
  * Animate skill bars
  */
 function animateSkills() {
-    const skillFills = document.querySelectorAll('.skill-fill');
-    skillFills.forEach(fill => {
-        fill.style.animation = 'skill-fill 1s ease-out forwards';
+    const skillBars = document.querySelectorAll('.skill-progress');
+    skillBars.forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0';
+        setTimeout(() => {
+            bar.style.transition = 'width 1s ease-out';
+            bar.style.width = width;
+        }, 100);
     });
 }
 
@@ -299,9 +307,11 @@ function initProjectFilter() {
                 const category = card.getAttribute('data-category');
                 
                 if (filter === 'all' || category === filter) {
+                    card.style.display = 'block';
                     card.classList.remove('hidden');
                     card.style.animation = 'fadeIn 0.3s ease-in';
                 } else {
+                    card.style.display = 'none';
                     card.classList.add('hidden');
                 }
             });
@@ -351,11 +361,58 @@ function init() {
     console.log('Portfolio initialized successfully');
 }
 
+/**
+ * Typing animation for hero title
+ */
+function initTypingAnimation() {
+    const heroTitle = document.querySelector('.hero-title');
+    if (!heroTitle) return;
+    
+    const spans = heroTitle.querySelectorAll('span');
+    const fullText = Array.from(spans).map(s => s.textContent).join(' ');
+    
+    // Clear the title
+    heroTitle.innerHTML = '';
+    spans.forEach((span, index) => {
+        const newSpan = document.createElement('span');
+        newSpan.textContent = '';
+        heroTitle.appendChild(newSpan);
+    });
+    
+    let charIndex = 0;
+    let spanIndex = 0;
+    const typingSpeed = 100; // ms per character
+    
+    function typeCharacter() {
+        if (spanIndex < spans.length) {
+            const currentSpan = heroTitle.querySelectorAll('span')[spanIndex];
+            const textToType = spans[spanIndex].textContent;
+            
+            if (charIndex < textToType.length) {
+                currentSpan.textContent += textToType[charIndex];
+                charIndex++;
+                setTimeout(typeCharacter, typingSpeed);
+            } else {
+                charIndex = 0;
+                spanIndex++;
+                setTimeout(typeCharacter, 200); // Delay between lines
+            }
+        }
+    }
+    
+    // Start typing after a short delay
+    setTimeout(typeCharacter, 300);
+}
+
 // Run initialization when DOM is ready
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', () => {
+        init();
+        initTypingAnimation();
+    });
 } else {
     init();
+    initTypingAnimation();
 }
 
 // ============================================
