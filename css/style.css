@@ -320,6 +320,59 @@ a:hover {
     overflow: hidden;
 }
 
+/* Technology Logo Blobs */
+.tech-blob {
+    position: absolute;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.15;
+    z-index: 1;
+    animation: float-blob 6s ease-in-out infinite;
+}
+
+.tech-blob-1 {
+    width: 300px;
+    height: 300px;
+    top: 10%;
+    left: 5%;
+    background: radial-gradient(circle at 30% 30%, rgba(124, 58, 237, 0.4), transparent);
+    animation-delay: 0s;
+}
+
+.tech-blob-2 {
+    width: 250px;
+    height: 250px;
+    top: 50%;
+    right: 10%;
+    background: radial-gradient(circle at 30% 30%, rgba(168, 85, 247, 0.4), transparent);
+    animation-delay: 2s;
+}
+
+.tech-blob-3 {
+    width: 280px;
+    height: 280px;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: radial-gradient(circle at 30% 30%, rgba(124, 58, 237, 0.3), transparent);
+    animation-delay: 4s;
+}
+
+.tech-logo {
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 20px rgba(124, 58, 237, 0.5));
+}
+
+@keyframes float-blob {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -30px) scale(1.05); }
+    66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
 .hero-container {
     max-width: 1400px;
     margin: 0 auto;
