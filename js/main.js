@@ -5,43 +5,21 @@
 
 // Configuration object for easy URL updates
 const CONFIG = {
-    // Template URLs - Replace these with your actual URLs
-    aboutPhoto: '../assets/about.png',
-    resumeUrl: '../assets/resume.pdf',
+    aboutPhoto: 'assets/about.png',
+    resumeUrl: 'assets/resume.pdf',
     
-    // Contact information
     email: 'tztayyaba.26@gmail.com',
     linkedin: 'https://www.linkedin.com/in/tayyaba-zubaid-2553b2379/',
     github: 'https://github.com/Tayyaba-tz',
     
-    // Project links
     projects: [
-        {
-            image: '../assets/projects/deenify.png',
-            link: 'https://deenify-tk.netlify.app/'
-        },
-        {
-            image: '../assets/projects/fintrack.png',
-            link: 'https://github.com/Tayyaba-tz/FinTrack'
-        },
-        {
-            image: '../assets/projects/pokemon.png',
-            link: 'https://pokemon-info-card.netlify.app/'
-        },
-        {
-            image: '../assets/projects/weather.png',
-            link: 'https://weather-dash-tz.netlify.app/'
-        },
-        {
-            image: '../assets/projects/evacuation.jpeg',
-            link: 'https://github.com/Tayyaba-tz/Disaster-Evacuation-Path-Planner'
-        },
-        {
-            image: '../assets/projects/tomzora.png',
-            link: 'https://tomzora.netlify.app/'
-        },
+        { image: 'assets/projects/deenify.png',    link: 'https://deenify-tk.netlify.app/' },
+        { image: 'assets/projects/fintrack.png',   link: 'https://github.com/Tayyaba-tz/FinTrack' },
+        { image: 'assets/projects/pokemon.png',    link: 'https://pokemon-info-card.netlify.app/' },
+        { image: 'assets/projects/weather.png',    link: 'https://weather-dash-tz.netlify.app/' },
+        { image: 'assets/projects/evacuation.jpeg',link: 'https://github.com/Tayyaba-tz/Disaster-Evacuation-Path-Planner' },
+        { image: 'assets/projects/tomzora.png',    link: 'https://tomzora.netlify.app/' },
     ],
-   
 };
 
 // ============================================
@@ -53,13 +31,10 @@ const CONFIG = {
  * This allows dynamic updates when resume or other files change
  */
 function updateDynamicContent() {
-    // Update profile and about photos
-    const profileImg = document.querySelector('.hero-image');
+    // Update about photo
     const aboutImg = document.querySelector('.about-image');
-    
-    if (profileImg) profileImg.src = CONFIG.profilePhoto;
     if (aboutImg) aboutImg.src = CONFIG.aboutPhoto;
-    
+
     // Update CV download buttons
     const cvButtons = document.querySelectorAll('.btn-cv, .experience-container .btn-primary');
     cvButtons.forEach(btn => {
@@ -67,52 +42,18 @@ function updateDynamicContent() {
             btn.href = CONFIG.resumeUrl;
         }
     });
-    
-    // Update project images and links
+
+    // Update project images
     const projectCards = document.querySelectorAll('.project-card');
     projectCards.forEach((card, index) => {
         if (index < CONFIG.projects.length) {
             const img = card.querySelector('.project-image');
-            const link = card.querySelector('.project-link');
-            
             if (img) img.src = CONFIG.projects[index].image;
-            if (link) link.href = CONFIG.projects[index].link;
         }
     });
-    
-    // Update reviewer avatars
-    const avatarImages = document.querySelectorAll('.reviewer-avatars img');
-    avatarImages.forEach((img, index) => {
-        if (index < CONFIG.avatars.length) {
-            img.src = CONFIG.avatars[index];
-        }
-    });
-    
-    // Update social links
-    updateSocialLinks();
-    
+
     // Update contact information
     updateContactInfo();
-}
-
-/**
- * Update all social media links
- */
-function updateSocialLinks() {
-    const socialLinks = {
-        'TWITTER_URL': CONFIG.twitter,
-        'DRIBBBLE_URL': CONFIG.dribbble,
-        'BEHANCE_URL': CONFIG.behance,
-        'PINTEREST_URL': CONFIG.pinterest
-    };
-    
-    document.querySelectorAll('a[href*="TWITTER_URL"], a[href*="DRIBBBLE_URL"], a[href*="BEHANCE_URL"], a[href*="PINTEREST_URL"]').forEach(link => {
-        for (const [placeholder, url] of Object.entries(socialLinks)) {
-            if (link.href.includes(placeholder)) {
-                link.href = url;
-            }
-        }
-    });
 }
 
 /**
@@ -248,22 +189,25 @@ function initIntersectionObserver() {
  */
 function animateStats() {
     const statNumbers = document.querySelectorAll('.stat-number');
-    
+
     statNumbers.forEach(stat => {
         const target = parseInt(stat.getAttribute('data-target'));
+        const suffix = stat.getAttribute('data-suffix') || '';
+        if (isNaN(target)) return;
+
         let current = 0;
-        const duration = 2500; // 2.5 seconds
-        const frames = 60;
+        const duration = 1800;
+        const frames = 100;
         const increment = target / frames;
         const frameTime = duration / frames;
-        
+
         const interval = setInterval(() => {
             current += increment;
             if (current >= target) {
-                stat.textContent = target;
+                stat.textContent = target + suffix;
                 clearInterval(interval);
             } else {
-                stat.textContent = Math.floor(current);
+                stat.textContent = Math.floor(current) + suffix;
             }
         }, frameTime);
     });
@@ -278,7 +222,7 @@ function animateSkills() {
         const width = bar.style.width;
         bar.style.width = '0';
         setTimeout(() => {
-            bar.style.transition = 'width 1s ease-out';
+            bar.style.transition = 'width 10s ease-out';
             bar.style.width = width;
         }, 100);
     });
@@ -294,25 +238,20 @@ function animateSkills() {
 function initProjectFilter() {
     const filterBtns = document.querySelectorAll('.filter-btn');
     const projectCards = document.querySelectorAll('.project-card');
-    
+
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            // Update active button
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            
-            // Filter projects
+
             const filter = btn.getAttribute('data-filter');
             projectCards.forEach(card => {
                 const category = card.getAttribute('data-category');
-                
                 if (filter === 'all' || category === filter) {
-                    card.style.display = 'block';
-                    card.classList.remove('hidden');
+                    card.style.display = '';
                     card.style.animation = 'fadeIn 0.3s ease-in';
                 } else {
                     card.style.display = 'none';
-                    card.classList.add('hidden');
                 }
             });
         });
@@ -433,11 +372,6 @@ function setupConfigWatcher() {
             return true;
         }
     };
-    
-    // Note: This is a simple implementation. For production, consider using:
-    // - LocalStorage to persist changes
-    // - API calls to fetch updated content
-    // - WebSocket for real-time updates
 }
 
 // ============================================
@@ -475,24 +409,12 @@ function updateResumeUrl(newUrl) {
     console.log('Resume URL updated to:', newUrl);
 }
 
-/**
- * Function to update profile photo dynamically
- * Usage: updateProfilePhoto('https://example.com/new-photo.jpg')
- */
-function updateProfilePhoto(newUrl) {
-    CONFIG.profilePhoto = newUrl;
-    const profileImg = document.querySelector('.hero-image');
-    if (profileImg) profileImg.src = newUrl;
-    console.log('Profile photo updated to:', newUrl);
-}
-
 // Export functions for external use (if needed)
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         CONFIG,
         updateDynamicContent,
         updateResumeUrl,
-        updateProfilePhoto,
         updateConfigFromSource
     };
 }
